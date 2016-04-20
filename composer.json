@@ -1,0 +1,13 @@
+{
+    "name": "filakhtov/bigcommerce",
+    "description": "BigCommerce test task",
+    "require": {
+        "phpunit/phpunit": "@stable"
+    },
+    "authors": [
+        {
+            "name": "Garry Filakhtov",
+            "email": "filakhtov@gmail.com"
+        }
+    ]
+}
