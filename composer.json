@@ -1,13 +1,18 @@
 {
     "name": "filakhtov/bigcommerce",
-    "description": "BigCommerce test task",
-    "require": {
-        "phpunit/phpunit": "@stable"
+    "description": "BigCommerce test project",
+    "require-dev": {
+        "phpunit/phpunit": "^5.@stable"
     },
     "authors": [
         {
             "name": "Garry Filakhtov",
             "email": "filakhtov@gmail.com"
         }
-    ]
+    ],
+    "autoload": {
+        "psr-4": {
+            "BigCommerce\\": "BigCommerce/"
+        }
+    }
 }
