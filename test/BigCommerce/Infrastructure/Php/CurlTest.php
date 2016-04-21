@@ -1,7 +1,7 @@
 <?php namespace test\BigCommerce\Infrastructure\Php;
 
 use \BigCommerce\Infrastructure\Php\Curl;
-use \BigCommerce\Infrastructure\Php\CurlAdapter;
+use \BigCommerce\Infrastructure\Php\CurlProxy;
 use \PHPUnit_Framework_MockObject_MockObject;
 
 class CurlTest extends \PHPUnit_Framework_TestCase
@@ -13,7 +13,7 @@ class CurlTest extends \PHPUnit_Framework_TestCase
     protected function setUp()
     {
         parent::setUp();
-        $this->curlAdapter = $this->getMock(CurlAdapter::class);
+        $this->curlAdapter = $this->getMock(CurlProxy::class);
     }
 
     public function testInvoke()
@@ -44,8 +44,8 @@ class CurlTest extends \PHPUnit_Framework_TestCase
     {
         $curlHandle = 'FakeCurlResource#2';
         $this->curlAdapter->expects($this->once())->method('init')->willReturn($curlHandle);
-
         $this->curlAdapter->expects($this->once())->method('close')->with($curlHandle);
+
         new Curl($this->curlAdapter);
     }
 
@@ -58,6 +58,19 @@ class CurlTest extends \PHPUnit_Framework_TestCase
 
         $curl = new Curl($this->curlAdapter);
         $curl();
+    }
+
+    /** @expectedException \BigCommerce\Infrastructure\Php\CurlException */
+    public function testSetUrlFail()
+    {
+        $curlHandle = 'FakeCurlResource#4';
+        $url = 'htps://google.com/';
+
+        $this->curlAdapter->expects($this->once())->method('init')->willReturn($curlHandle);
+        $this->curlAdapter->expects($this->at(2))->method('setopt')->with($curlHandle, CurlProxy::URL, $url)->willReturn(FALSE);
+
+        $curl = new Curl($this->curlAdapter);
+        $curl->setUrl($url);
     }
 
 }

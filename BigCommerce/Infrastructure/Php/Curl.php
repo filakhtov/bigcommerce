@@ -1,6 +1,6 @@
 <?php namespace BigCommerce\Infrastructure\Php;
 
-use \BigCommerce\Infrastructure\Php\CurlAdapter;
+use \BigCommerce\Infrastructure\Php\CurlProxy;
 use \BigCommerce\Infrastructure\Php\CurlException;
 
 class Curl
@@ -9,10 +9,10 @@ class Curl
     /** @var resource */
     private $curlHandle;
 
-    /** @var CurlAdapter */
+    /** @var CurlProxy */
     private $curlAdapter;
 
-    public function __construct(CurlAdapter $curlAdapter)
+    public function __construct(CurlProxy $curlAdapter)
     {
         $this->curlAdapter = $curlAdapter;
         $this->curlHandle = $this->curlAdapter->init();
@@ -21,7 +21,7 @@ class Curl
             throw new CurlException("Failed to create curl handle.");
         }
 
-        $this->curlAdapter->setopt($this->curlHandle, CurlAdapter::RETURN_TRANSFER, TRUE);
+        $this->curlAdapter->setopt($this->curlHandle, CurlProxy::RETURN_TRANSFER, TRUE);
     }
 
     public function __destruct()
@@ -31,7 +31,9 @@ class Curl
 
     public function setUrl($url)
     {
-        $this->curlAdapter->setopt($this->curlHandle, CurlAdapter::URL, $url);
+        if (false === $this->curlAdapter->setopt($this->curlHandle, CurlProxy::URL, $url)) {
+            throw new CurlException("Failed to set url.");
+        }
 
         return $this;
     }

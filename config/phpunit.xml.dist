@@ -16,7 +16,7 @@
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">../BigCommerce</directory>
             <exclude>
-                <file>../BigCommerce/Infrastructure/Php/CurlAdapter.php</file>
+                <file>../BigCommerce/Infrastructure/Php/CurlProxy.php</file>
             </exclude>
         </whitelist>
     </filter>

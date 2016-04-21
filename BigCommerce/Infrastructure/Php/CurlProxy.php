@@ -1,6 +1,6 @@
 <?php namespace BigCommerce\Infrastructure\Php;
 
-class CurlAdapter
+class CurlProxy
 {
 
     const URL = CURLOPT_URL;
