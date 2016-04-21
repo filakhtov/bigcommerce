@@ -6,8 +6,10 @@ use \InvalidArgumentException;
 class SearchFlickrRequest implements FlickrRequestInterface
 {
 
+    /** @var string */
     private $text;
 
+    /** @throws InvalidArgumentException */
     public function __construct($text)
     {
         if (!is_string($text)) {
@@ -17,6 +19,7 @@ class SearchFlickrRequest implements FlickrRequestInterface
         $this->text = $text;
     }
 
+    /** @return array */
     public function data()
     {
         return [

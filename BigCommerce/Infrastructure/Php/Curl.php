@@ -1,7 +1,7 @@
 <?php namespace BigCommerce\Infrastructure\Php;
 
-use \BigCommerce\Infrastructure\Php\CurlProxy;
 use \BigCommerce\Infrastructure\Php\CurlException;
+use \BigCommerce\Infrastructure\Php\CurlProxy;
 
 class Curl
 {
@@ -12,6 +12,7 @@ class Curl
     /** @var CurlProxy */
     private $curlAdapter;
 
+    /** @throws CurlException */
     public function __construct(CurlProxy $curlAdapter)
     {
         $this->curlAdapter = $curlAdapter;
@@ -29,6 +30,10 @@ class Curl
         $this->curlAdapter->close($this->curlHandle);
     }
 
+    /**
+     * @throws CurlException
+     * @return Curl
+     */
     public function setUrl($url)
     {
         if (false === $this->curlAdapter->setopt($this->curlHandle, CurlProxy::URL, $url)) {
@@ -38,6 +43,10 @@ class Curl
         return $this;
     }
 
+    /**
+     * @throws CurlException
+     * @return string
+     */
     public function __invoke()
     {
         $response = $this->curlAdapter->exec($this->curlHandle);
