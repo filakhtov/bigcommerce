@@ -1,0 +1,3 @@
+flickr:
+    api_endpoint: 'https://api.flickr.com/services/rest/'
+    api_key: 'YOUR_API_KEY_HERE'

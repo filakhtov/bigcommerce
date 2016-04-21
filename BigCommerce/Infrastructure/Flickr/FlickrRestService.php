@@ -23,7 +23,8 @@ class FlickrRestService
     {
         $requestData = array_merge([
             'api_key' => $this->configuration->apiKey(),
-            'format' => 'php_serial'
+            'format' => 'php_serial',
+            'privacy_filter' => 'public'
         ], $request->data());
 
         $requestQuery = http_build_query($requestData);

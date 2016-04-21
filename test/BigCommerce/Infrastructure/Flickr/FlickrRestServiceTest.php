@@ -32,14 +32,14 @@ class FlickrRestServiceTest extends \PHPUnit_Framework_TestCase
                 'BigCommerce',
                 'bc156998-5879-48af-82db-02d671895402',
                 'https://api.flickr.com/services/rest/',
-                'https://api.flickr.com/services/rest/?api_key=bc156998-5879-48af-82db-02d671895402&format=php_serial&method=flickr.photos.search&text=BigCommerce',
+                'https://api.flickr.com/services/rest/?api_key=bc156998-5879-48af-82db-02d671895402&format=php_serial&privacy_filter=public&method=flickr.photos.search&text=BigCommerce',
                 '{"status":"OK"}'
             ],
             [
                 'Australia',
                 '2b29cc76-6deb-4794-8e0e-04429595461d',
                 'https://api2.flickr.com/services/rest/',
-                'https://api2.flickr.com/services/rest/?api_key=2b29cc76-6deb-4794-8e0e-04429595461d&format=php_serial&method=flickr.photos.search&text=Australia',
+                'https://api2.flickr.com/services/rest/?api_key=2b29cc76-6deb-4794-8e0e-04429595461d&format=php_serial&privacy_filter=public&method=flickr.photos.search&text=Australia',
                 '{"response":"yes"}'
             ]
         ];

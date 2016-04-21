@@ -14,5 +14,9 @@
         "psr-4": {
             "BigCommerce\\": "BigCommerce/"
         }
+    },
+    "require": {
+        "symfony/yaml": "^3.0",
+        "twig/twig": "^1.24"
     }
 }
