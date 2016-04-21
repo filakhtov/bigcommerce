@@ -4,7 +4,7 @@ interface FlickrRestConfigurationInterface
 {
 
     /** @return string */
-    public function endpointUrl();
+    public function apiEndpoint();
 
     /** @return string */
     public function apiKey();

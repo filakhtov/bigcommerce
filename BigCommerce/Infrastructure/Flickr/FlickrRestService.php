@@ -21,12 +21,16 @@ class FlickrRestService
 
     public function __invoke(FlickrRequestInterface $request)
     {
-        $requestData = array_merge(['api_key' => $this->configuration->apiKey()], $request->data());
+        $requestData = array_merge([
+            'api_key' => $this->configuration->apiKey(),
+            'format' => 'php_serial'
+        ], $request->data());
+
         $requestQuery = http_build_query($requestData);
 
         $curl = $this->curl;
-        $curl->setUrl($this->configuration->endpointUrl() . '?' . $requestQuery);
-        return $curl();
+        $curl->setUrl($this->configuration->apiEndpoint() . '?' . $requestQuery);
+        return unserialize($curl());
     }
 
 }
