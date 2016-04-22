@@ -1,1 +1,70 @@
 {% extends "layout.html.twig" %}
+
+{% block scripts %}
+    <script src="/js/main.js" type="text/javascript"></script>
+    <script src="/js/Search.js" type="text/javascript"></script>
+{% endblock %}
+
+{% block content %}
+    <div data-ng-app="bigcommerce-flickr" data-ng-controller="Search">
+        <div class="row">
+            <div class="col-xs-12">
+                <form name="searchForm" data-ng-submit="searchFormSubmit()" novalidate="">
+                    <div class="input-group" data-ng-class="{'has-error':error}">
+                        <input type="text" name="query" class="form-control input-lg" placeholder="What are you looking for today?" required="" data-ng-model="searchRequest.query" minlength="3">
+                        <span class="input-group-btn">
+                            <button type="submit" class="btn btn-success btn-lg">
+                                <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                                <span class="hidden-xs">Search!</span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row" data-ng-cloak="">
+            <div class="col-xs-12" data-ng-show="error">
+                <div class="alert alert-danger text-center cursor-pointer" role="alert" data-ng-click="hideError()">[{ error }]</div>
+            </div>
+            <div class="col-xs-12" data-ng-show="loader">
+                <div class="alert alert-info text-center" role="alert">Loading, please wait...</div>
+            </div>
+        </div>
+        <div class="row" data-ng-cloak="" data-ng-show="images && !imagePreview">
+            <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" data-ng-repeat="image in images">
+                <a href="[{ image.url }]" data-ng-click="viewImage($event, image)">
+                    <img src="[{ image.thumbnail }]" alt="[{ image.title }]" class="img-responsive" />
+                </a>
+            </div>
+            <div class="col-xs-12 text-center">
+                <nav>
+                    <ul class="pagination pagination-lg">
+                        <li data-ng-class="{'disabled':currentPage === 1}">
+                            <a href="#" data-ng-click="goToPage(currentPage - 1)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+                        </li>
+                        <li data-ng-repeat="page in pages" data-ng-class="{'active':currentPage === page}">
+                            <a href="#" data-ng-click="goToPage(currentPage - 1)">[{ page }]</a>
+                        </li>
+                        <li data-ng-class="{'disabled':currentPage === getLastPage()}">
+                            <a href="#" data-ng-click="goToPage(currentPage + 1)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
+        <div class="row" data-ng-repeat="image in images" data-ng-show="imagePreview === image">
+            <div class="col-xs-1">
+                <button type="button" class="btn btn-success btn-lg" data-ng-click="hideImage()">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="hidden-xs"></span>
+                </button>
+            </div>
+            <div class="col-xs-11">
+                <h1>[{ imagePreview.title || "No title" }]</h1>
+            </div>
+            <div class="col-xs-12 text-center">
+                <img src="[{ image.url }]" alt="[{ image.title }]" class="img-responsive center" />
+            </div>
+        </div>
+    </div>
+{% endblock %}

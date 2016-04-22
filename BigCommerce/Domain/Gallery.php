@@ -1,6 +1,8 @@
 <?php namespace BigCommerce\Domain;
 
-class Gallery
+use \JsonSerializable;
+
+class Gallery implements JsonSerializable
 {
 
     private $images = [];
@@ -13,7 +15,7 @@ class Gallery
         $this->totalPages = $pages;
     }
 
-    public function addImage(Image $image)
+    public function addImage(\BigCommerce\Domain\Image $image)
     {
         if (false === in_array($image, $this->images)) {
             $this->images[] = $image;
@@ -33,6 +35,11 @@ class Gallery
     public function page()
     {
         return $this->page;
+    }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 
 }

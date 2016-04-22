@@ -40,7 +40,7 @@ class FlickrApiRepository implements ApiRepositoryInterface
     private function imageFactory(array $flickrImageData)
     {
         $thumbnail = sprintf(
-            'https://farm%d.staticflickr.com/%d/%d_%s_q.jpg',
+            'https://farm%d.staticflickr.com/%d/%d_%s_n.jpg',
             $flickrImageData['farm'], $flickrImageData['server'], $flickrImageData['id'], $flickrImageData['secret']
         );
 

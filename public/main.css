@@ -1,10 +1,32 @@
 body {
-    min-height:vheight;
+    position:relative;
+    min-height:100vh;
 }
 
-.footer {
+
+.container-fluid.header,
+.container-fluid.footer {
+    width:100vw;
     padding-top:0.5em;
     padding-bottom:0.5em;
     background-color:#4b557d;
     color:#ffffff;
+}
+
+.container-fluid.footer {
+    position:absolute;
+    bottom:0;
+}
+
+.container.content .row {
+    padding-top:1.5em;
+}
+
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.img-responsive.center {
+    margin-left:auto;
+    margin-right:auto;
 }

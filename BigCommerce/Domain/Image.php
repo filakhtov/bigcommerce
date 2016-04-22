@@ -1,6 +1,8 @@
 <?php namespace BigCommerce\Domain;
 
-class Image
+use \JsonSerializable;
+
+class Image implements JsonSerializable
 {
 
     private $thumbnail;
@@ -27,6 +29,11 @@ class Image
     public function url()
     {
         return $this->url;
+    }
+
+    public function jsonSerialize()
+    {
+        return get_object_vars($this);
     }
 
 }
