@@ -44,6 +44,14 @@ Copy ``config.yml.dist`` to ``config.yml`` inside config directory and adjust ap
 
 Run ``composer install`` inside project folder.
 
+### Running the test suite
+
+Just execute ``./vendor/phpunit/phpunit/phpunit -c config`` from project root directory and you will see test results.
+
+To generate code coverage use ``./vendor/phpunit/phpunit/phpunit -c config --coverage-html=coverage``. This will create ``coverage`` subdirectory. Use ``index.html`` to browse the state.
+
+Due to the time constraint only some ``Infrastructure`` parts are tested. But once you see a tested class - it is 100% covered.
+
 ### Libraries and technologies that are used inside the project
 
 - AngularJS for frontend handling
