@@ -33,38 +33,41 @@
         <div class="row" data-ng-cloak="" data-ng-show="images && !imagePreview">
             <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" data-ng-repeat="image in images">
                 <a href="[{ image.url }]" data-ng-click="viewImage($event, image)">
-                    <img src="[{ image.thumbnail }]" alt="[{ image.title }]" class="img-responsive" />
+                    <img data-ng-src="[{ image.thumbnail }]" alt="[{ image.title }]" class="img-responsive" />
                 </a>
             </div>
             <div class="col-xs-12 text-center">
                 <nav>
-                    <ul class="pagination pagination-lg">
+                    <ul class="pagination">
                         <li data-ng-class="{'disabled':currentPage === 1}">
-                            <a href="#" data-ng-click="goToPage(currentPage - 1)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+                            <a href="#" data-ng-click="goToPage(searchRequest.page - 1)" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
                         </li>
-                        <li data-ng-repeat="page in pages" data-ng-class="{'active':currentPage === page}">
-                            <a href="#" data-ng-click="goToPage(currentPage - 1)">[{ page }]</a>
+                        <li data-ng-repeat="page in pages track by $index"
+                            data-ng-class="{'active':searchRequest.page === page, 'disabled':!page, 'visible-lg-inline':!isPageCloseToCurrent(page), 'hidden-xs':page !== searchRequest.page}">
+                            <a href="#" data-ng-click="goToPage(page)" data-ng-if="page">[{ page }]</a>
+                            <a href="#" data-ng-if="!page">&hellip;</a>
                         </li>
-                        <li data-ng-class="{'disabled':currentPage === getLastPage()}">
-                            <a href="#" data-ng-click="goToPage(currentPage + 1)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
+                        <li data-ng-class="{'disabled':searchRequest.page === getLastPage()}">
+                            <a href="#" data-ng-click="goToPage(searchRequest.page + 1)" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
                         </li>
                     </ul>
                 </nav>
             </div>
         </div>
         <div class="row" data-ng-repeat="image in images" data-ng-show="imagePreview === image">
-            <div class="col-xs-1">
+            <div class="col-xs-3 text-right">
                 <button type="button" class="btn btn-success btn-lg" data-ng-click="hideImage()">
                     <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
                     <span class="hidden-xs"></span>
                 </button>
             </div>
-            <div class="col-xs-11">
-                <h1>[{ imagePreview.title || "No title" }]</h1>
+            <div class="col-xs-9">
+                <h3>[{ imagePreview.title || "No title" }]</h3>
             </div>
             <div class="col-xs-12 text-center">
-                <img src="[{ image.url }]" alt="[{ image.title }]" class="img-responsive center" />
+                <img data-ng-src="[{ image.url }]" alt="[{ image.title }]" class="img-responsive center" />
             </div>
         </div>
+        <div class="row spacer"></div>
     </div>
 {% endblock %}
