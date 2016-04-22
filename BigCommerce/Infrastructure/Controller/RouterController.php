@@ -1,7 +1,7 @@
 <?php namespace BigCommerce\Infrastructure\Controller;
 
 use \BigCommerce\Infrastructure\Routing\Controller;
-use \Exception;
+use \Symfony\Component\HttpFoundation\Response;
 
 class RouterController extends Controller
 {
@@ -12,10 +12,11 @@ class RouterController extends Controller
         return $this->service('twig')->loadTemplate('404.html.twig')->render([]);
     }
 
-    public function error(Exception $exception)
+    public function error($message)
     {
-        http_response_code(500);
-        return $this->service('twig')->loadTemplate('error.html.twig')->render(['message' => $exception->getMessage()]);
+        return new Response(
+            $this->service('twig')->loadTemplate('error.html.twig')->render(['message' => $message]), 500
+        );
     }
 
 }

@@ -3,27 +3,23 @@
 use \BigCommerce\Infrastructure\Routing\Controller;
 use \BigCommerce\Infrastructure\Routing\RouterException;
 use \InvalidArgumentException;
+use \Symfony\Component\HttpFoundation\Request;
+use \Symfony\Component\HttpFoundation\Response;
 
 class Router
 {
 
-    private $requestPath;
-    private $queryString = [];
+    private $request;
     private $routes = [];
 
-    public function __construct($requestUri)
+    public function __construct(Request $request)
     {
-        $this->requestPath = $requestUri;
-
-        if (false !== strpos($requestUri, '?')) {
-            list($this->requestPath, $queryString) = explode('?', $requestUri, 2);
-            parse_str($queryString, $this->queryString);
-        }
+        $this->request = $request;
     }
 
     /**
      * @throws InvalidArgumentException
-     * @return Router
+     * @return \BigCommerce\Infrastructure\Routing\Router
      */
     public function addRoute($path, callable $action)
     {
@@ -38,7 +34,7 @@ class Router
 
     /**
      * @throws InvalidArgumentException
-     * @return Router
+     * @return \BigCommerce\Infrastructure\Routing\Router
      */
     public function addRoutes(array $routes)
     {
@@ -56,12 +52,16 @@ class Router
     public function __invoke()
     {
         foreach ($this->routes as $route => $action) {
-            if ($route === $this->requestPath) {
-                return $action;
+            if ($route === $this->request->getPathInfo()) {
+                return $this->checkResponse($action($this->request));
             }
         }
 
-        throw new RouterException("No route for: {$this->requestPath}");
+        throw new RouterException("No route for: {$this->request}");
+    }
+
+    private function checkResponse(Response $response) {
+        return $response;
     }
 
 }

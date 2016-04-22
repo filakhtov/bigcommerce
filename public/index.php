@@ -9,43 +9,43 @@ use \BigCommerce\Infrastructure\Php\Curl;
 use \BigCommerce\Infrastructure\Php\CurlProxy;
 use \BigCommerce\Infrastructure\Registry\ServiceRegistry;
 use \BigCommerce\Infrastructure\Routing\Router;
-use \BigCommerce\Infrastructure\Routing\RouterException;
 use \BigCommerce\Infrastructure\Twig\CopyrightExtension;
+use \Symfony\Component\HttpFoundation\Request;
+use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\Yaml\Yaml;
 
 $projectPath = dirname(__DIR__) . DIRECTORY_SEPARATOR;
 require_once $projectPath . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 
-$registry = new ServiceRegistry([
-    'flickr.repository' => new FlickrApiRepository(
-        new FlickrRestService(
-            new Configuration(
-                Yaml::parse(file_get_contents($projectPath . 'config' . DIRECTORY_SEPARATOR . 'config.yml'))
-            ),
-            new Curl(
-                new CurlProxy()
-            )
-        )
-    ),
-    'twig' => new \Twig_Environment(
-        new \Twig_Loader_Filesystem([$projectPath . 'templates'])
-    )
-]);
-
-$registry->service("twig")->addExtension(new CopyrightExtension());
-
 try {
-    $requestPath = filter_input(INPUT_SERVER, 'REQUEST_URI');
-    $router = new Router($requestPath);
-    $router->addRoute('/search', [new FlickrController($registry), 'search']);
-    $controller = $router();
-    $response = $controller();
-} catch (RouterException $re) {
+    $registry = new ServiceRegistry([
+        'flickr.repository' => new FlickrApiRepository(
+            new FlickrRestService(
+                new Configuration(
+                    Yaml::parse(file_get_contents($projectPath . 'config' . DIRECTORY_SEPARATOR . 'config.yml'))
+                ),
+                new Curl(
+                    new CurlProxy()
+                )
+            )
+        ),
+        'twig' => new \Twig_Environment(
+            new \Twig_Loader_Filesystem([$projectPath . 'templates'])
+        ),
+        'router' => new Router(Request::createFromGlobals())
+    ]);
+
     $routerController = new RouterController($registry);
-    $response = $routerController->pageNotFound();
+    set_error_handler(function($code, $message) use ($routerController) {
+        $routerController->error($message)->send();
+    }, E_RECOVERABLE_ERROR);
+
+    $registry->service("twig")->addExtension(new CopyrightExtension());
+    $router = $registry->service('router');
+    $router->addRoute('/search', [new FlickrController($registry), 'search']);
+
+    $router()->send();
 } catch (Exception $e) {
     $routerController = new RouterController($registry);
-    $response = $routerController->error($e);
+    $routerController->error($e->getMessage())->send();
 }
-
-echo $response;
