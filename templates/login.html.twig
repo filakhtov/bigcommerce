@@ -1,0 +1,32 @@
+{% extends "layout.html.twig" %}
+
+{% block title %}BigCommerce :: Authentication{% endblock %}
+
+{% block header %}Hello stranger. Please, introduce yourself!{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-xs-12 col-sm-8 col-sm-offset-2 col-md-6 col-md-offset-3 col-lg-4 col-lg-offset-4">
+            {% if message %}
+            <div class="alert alert-danger text-center" role="alert">{{ message }}</div>
+            {% endif %}
+            <form name="loginForm" action="/login" method="post">
+                <fieldset class="form-group form-group-lg">
+                    <label for="username">Username:</label>
+                    <input type="text" name="username" class="form-control text-center" autofocus="autofocus" required="required" maxlength="10" minlength="3" />
+                </fieldset>
+                <fieldset class="form-group form-group-lg">
+                    <label for="password">Password:</label>
+                    <input type="password" name="password" class="form-control text-center" minlength="6" />
+                </fieldset>
+                <fieldset class="text-center">
+                    <input type="hidden" name="csrf-token" value="{{ csrfToken }}" />
+                    <div class="btn-group">
+                        <button type="submit" class="btn btn-lg btn-success">Login</button>
+                        <a href="/register" class="btn btn-lg btn-default">Register</a>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+{% endblock %}

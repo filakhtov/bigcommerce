@@ -13,6 +13,14 @@ class Gallery implements JsonSerializable
     {
         $this->page = $page;
         $this->totalPages = $pages;
+
+        if($this->page < 1) {
+            $this->page = 0;
+        }
+
+        if($this->page > $this->totalPages) {
+            $this->page = $this->totalPages;
+        }
     }
 
     public function addImage(\BigCommerce\Domain\Image $image)

@@ -16,6 +16,7 @@
 
     app.controller('Search', ['$scope', 'SearchRepository', '$location', function ($scope, SearchRepository, $location) {
         $scope.error = null;
+        $scope.noResults = false;
 
         $scope.viewImage = function($event, image) {
             $event.preventDefault();
@@ -55,20 +56,18 @@
         $scope.search = function(searchRequest) {
             $scope.hideError();
             $scope.showLoader(true);
+            $scope.noResults = false;
 
             SearchRepository(searchRequest.query, searchRequest.page)
                 .then(function(response) {
                     var data = response.data;
 
-                    if(data.page > data.totalPages) {
-                        data.page = data.totalPages;
-                    }
-
+                    $scope.noResults = (data.totalPages === 0);
                     $scope.images = data.images;
                     $scope.searchRequest.page = data.page;
                     $scope.pages = $scope.paginator(data.page, data.totalPages);
 
-                    $location.path('/search').search($scope.searchRequest);
+                    $location.search($scope.searchRequest);
                 }, function(response) {
                     if(getObjectVar(response, 'data', 'message')) {
                         $scope.showError(response.data.message);

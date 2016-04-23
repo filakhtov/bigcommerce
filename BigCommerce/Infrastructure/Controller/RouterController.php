@@ -11,7 +11,7 @@ class RouterController extends Controller
     public function pageNotFound(Request $request)
     {
         return new Response(
-            $this->service('twig')->loadTemplate('404.html.twig')->render(['url' => $request->getRequestUri()]), 404
+            $this->service('twig')->render('404.html.twig', ['url' => $request->getRequestUri()]), 404
         );
     }
 
@@ -21,7 +21,7 @@ class RouterController extends Controller
             return new JsonResponse(['message' => $message], 500);
         } else {
             return new Response(
-                $this->service('twig')->loadTemplate('error.html.twig')->render(['message' => $message]), 500
+                $this->service('twig')->render('error.html.twig', ['message' => $message]), 500
             );
         }
     }

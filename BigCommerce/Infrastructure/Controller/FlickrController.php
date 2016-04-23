@@ -10,14 +10,18 @@ use \Symfony\Component\HttpFoundation\Response;
 class FlickrController extends \BigCommerce\Infrastructure\Routing\Controller
 {
     public function search(Request $request) {
+        if(false === $this->isAuthenticated($request)) {
+            return new RedirectResponse('/login');
+        }
+
         return new Response(
-            $this->service('twig')->loadTemplate('search.html.twig')->render([])
+            $this->service('twig')->render('search.html.twig')
         );
     }
 
     public function gallery(Request $request) {
-        if(!$request->headers->get('X-Api')) {
-            return new RedirectResponse('/search');
+        if(false === $this->isAuthenticated($request)) {
+            return new JsonResponse(['message' => 'Please, authenticate before proceeding.'], 403);
         }
 
         $query = $request->query->get('query', null);

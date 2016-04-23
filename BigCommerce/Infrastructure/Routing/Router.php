@@ -1,6 +1,5 @@
 <?php namespace BigCommerce\Infrastructure\Routing;
 
-use \BigCommerce\Infrastructure\Routing\Controller;
 use \BigCommerce\Infrastructure\Routing\RouterException;
 use \InvalidArgumentException;
 use \Symfony\Component\HttpFoundation\Request;
@@ -9,13 +8,7 @@ use \Symfony\Component\HttpFoundation\Response;
 class Router
 {
 
-    private $request;
     private $routes = [];
-
-    public function __construct(Request $request)
-    {
-        $this->request = $request;
-    }
 
     /**
      * @throws InvalidArgumentException
@@ -47,17 +40,17 @@ class Router
 
     /**
      * @throws RouterException
-     * @return Controller
+     * @return callable
      */
-    public function __invoke()
+    public function resolve(Request $request)
     {
         foreach ($this->routes as $route => $action) {
-            if ($route === $this->request->getPathInfo()) {
-                return $this->checkResponse($action($this->request));
+            if ($route === $request->getPathInfo()) {
+                return $this->checkResponse($action($request));
             }
         }
 
-        throw new RouterException("No route for: {$this->request}");
+        throw new RouterException("No route for: {$request}");
     }
 
     private function checkResponse(Response $response) {

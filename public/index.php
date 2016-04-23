@@ -1,7 +1,10 @@
 <?php
 
+use \BigCommerce\Infrastructure\Authentication\AuthenticationRepository;
 use \BigCommerce\Infrastructure\Configuration\Configuration;
 use \BigCommerce\Infrastructure\Controller\FlickrController;
+use \BigCommerce\Infrastructure\Controller\LoginController;
+use \BigCommerce\Infrastructure\Controller\RegistrationController;
 use \BigCommerce\Infrastructure\Controller\RouterController;
 use \BigCommerce\Infrastructure\Flickr\FlickrApiRepository;
 use \BigCommerce\Infrastructure\Flickr\FlickrRestService;
@@ -12,6 +15,7 @@ use \BigCommerce\Infrastructure\Routing\Router;
 use \BigCommerce\Infrastructure\Routing\RouterException;
 use \BigCommerce\Infrastructure\Twig\CopyrightExtension;
 use \Symfony\Component\HttpFoundation\Request;
+use \Symfony\Component\HttpFoundation\Session\Session;
 use \Symfony\Component\Yaml\Yaml;
 
 $projectPath = dirname(__DIR__) . DIRECTORY_SEPARATOR;
@@ -20,6 +24,8 @@ require_once $projectPath . 'vendor' . DIRECTORY_SEPARATOR . 'autoload.php';
 $request = Request::createFromGlobals();
 
 try {
+    $request->setSession(new Session());
+
     $registry = new ServiceRegistry([
         'flickr.repository' => new FlickrApiRepository(
             new FlickrRestService(
@@ -34,7 +40,8 @@ try {
         'twig' => new \Twig_Environment(
             new \Twig_Loader_Filesystem([$projectPath . 'templates'])
         ),
-        'router' => new Router($request)
+        'router' => new Router(),
+        'auth' => new AuthenticationRepository()
     ]);
 
     $routerController = new RouterController($registry);
@@ -46,10 +53,13 @@ try {
 
     $router = $registry->service("router");
     $router
-        ->addRoute('/search', [new FlickrController($registry), 'search'])
-        ->addRoute('/gallery', [new FlickrController($registry), 'gallery']);
+        ->addRoute('/', [new FlickrController($registry), 'search'])
+        ->addRoute('/gallery', [new FlickrController($registry), 'gallery'])
+        ->addRoute('/login', [new LoginController($registry), 'login'])
+        ->addRoute('/logout', [new LoginController($registry), 'logout'])
+        ->addRoute('/register', [new RegistrationController($registry), 'register']);
 
-    $response = $router();
+    $response = $router->resolve($request);
 } catch (RouterException $e) {
     $response = $routerController->pageNotFound($request);
 } catch (Exception $e) {
