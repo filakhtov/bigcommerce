@@ -15,14 +15,24 @@ class SearchFlickrRequest implements FlickrRequestInterface
     /** @var int */
     private $page;
 
-    /** @throws InvalidArgumentException */
+    /**
+     * @param string $searchQuery
+     * @param int $resultsPerPage
+     * @param int $pageNumber
+     * @throws InvalidArgumentException
+     */
     public function __construct($searchQuery, $resultsPerPage, $pageNumber)
     {
-        $this->setSearchQuery($searchQuery);
-        $this->setPerPage($resultsPerPage);
-        $this->setPage($pageNumber);
+        $this->setSearchQuery($searchQuery)
+            ->setPerPage($resultsPerPage)
+            ->setPage($pageNumber);
     }
 
+    /**
+     * @param string $searchQuery
+     * @throws InvalidArgumentException
+     * @return SearchFlickrRequest
+     */
     private function setSearchQuery($searchQuery)
     {
         if (!is_string($searchQuery)) {
@@ -30,20 +40,41 @@ class SearchFlickrRequest implements FlickrRequestInterface
         }
 
         $this->searchQuery = $searchQuery;
+
+        return $this;
     }
 
+    /**
+     * @param int $resultsPerPage
+     * @throws InvalidArgumentException
+     * @return SearchFlickrRequest
+     */
     private function setPerPage($resultsPerPage)
     {
         $this->validatePage($resultsPerPage);
         $this->perPage = $resultsPerPage;
+
+        return $this;
     }
 
+    /**
+     * @param int $pageNumber
+     * @throws InvalidArgumentException
+     * @return SearchFlickrRequest
+     */
     private function setPage($pageNumber)
     {
         $this->validatePage($pageNumber);
         $this->page = $pageNumber;
+
+        return $this;
     }
 
+    /**
+     * @param int $pageParameter
+     * @throws InvalidArgumentException
+     * @return void
+     */
     private function validatePage($pageParameter)
     {
         if (!is_int($pageParameter)) {
@@ -55,7 +86,7 @@ class SearchFlickrRequest implements FlickrRequestInterface
         }
     }
 
-    /** @return array */
+    /** @return mixed[] */
     public function data()
     {
         return [

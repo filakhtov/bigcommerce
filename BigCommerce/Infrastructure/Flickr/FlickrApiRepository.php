@@ -9,6 +9,7 @@ use \BigCommerce\Infrastructure\Flickr\SearchFlickrRequest;
 class FlickrApiRepository implements ApiRepositoryInterface
 {
 
+    /** @var FlickrRestService */
     private $flickrRestService;
 
     public function __construct(FlickrRestService $flickrRestService)
@@ -16,6 +17,11 @@ class FlickrApiRepository implements ApiRepositoryInterface
         $this->flickrRestService = $flickrRestService;
     }
 
+    /**
+     * @param string $seachQuery
+     * @param int $pageNumber
+     * @return Gallery
+     */
     public function findGallery($seachQuery, $pageNumber)
     {
         $searchRequest = new SearchFlickrRequest($seachQuery, 5, $pageNumber);
@@ -23,21 +29,23 @@ class FlickrApiRepository implements ApiRepositoryInterface
         $flickrRestService = $this->flickrRestService;
         $response = $flickrRestService($searchRequest);
 
-        return $this->parseSearchResponse($response);
+        return $this->createGalleryFromFlickrData($response);
     }
 
-    private function parseSearchResponse(array $response)
+    /** @return Gallery */
+    private function createGalleryFromFlickrData(array $response)
     {
         $gallery = new Gallery($response['photos']['page'], $response['photos']['pages']);
 
         foreach ($response['photos']['photo'] as $flickrImageData) {
-            $gallery->addImage($this->imageFactory($flickrImageData));
+            $gallery->addImage($this->createImageFromFlickrData($flickrImageData));
         }
 
         return $gallery;
     }
 
-    private function imageFactory(array $flickrImageData)
+    /** @return Image */
+    private function createImageFromFlickrData(array $flickrImageData)
     {
         $thumbnail = sprintf(
             'https://farm%d.staticflickr.com/%d/%d_%s_n.jpg',

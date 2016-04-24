@@ -2,6 +2,7 @@
 
 use \BigCommerce\Domain\Entity\User;
 use \BigCommerce\Infrastructure\Form\CsrfTokenVerificationException;
+use \Exception;
 use \InvalidArgumentException;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
@@ -10,6 +11,7 @@ use \Symfony\Component\HttpFoundation\Response;
 class RegistrationController extends \BigCommerce\Infrastructure\Routing\Controller
 {
 
+    /** @return Response */
     public function register(Request $request)
     {
         if ($this->isAuthenticated($request)) {
@@ -23,6 +25,7 @@ class RegistrationController extends \BigCommerce\Infrastructure\Routing\Control
         }
     }
 
+    /** @return Response */
     private function showRegistrationForm(Request $request, array $data = [])
     {
         $data['csrfToken'] = $this->service('csrf')->generate($request, 'csrf_register');
@@ -32,6 +35,10 @@ class RegistrationController extends \BigCommerce\Infrastructure\Routing\Control
         );
     }
 
+    /**
+     * @throws Exception
+     * @return Response
+     */
     private function createAccount(Request $request)
     {
         try {
@@ -55,6 +62,13 @@ class RegistrationController extends \BigCommerce\Infrastructure\Routing\Control
         }
     }
 
+    /**
+     * @param string $username
+     * @param string $password
+     * @throws InvalidArgumentException
+     * @throws Exception
+     * @return void
+     */
     private function createUser($username, $password)
     {
         $user = new User();
@@ -66,6 +80,12 @@ class RegistrationController extends \BigCommerce\Infrastructure\Routing\Control
         $this->service('user')->persist($user);
     }
 
+    /**
+     * @param string $password
+     * @param string $repeat
+     * @throws InvalidArgumentException
+     * @return void
+     */
     private function verifyPassword($password, $repeat) {
         if(strlen($password) < 6) {
             throw new InvalidArgumentException('Password is too short. Minimal length is 6 characters.');

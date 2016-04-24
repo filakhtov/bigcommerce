@@ -6,6 +6,10 @@ use \Symfony\Component\HttpFoundation\Request;
 class CsrfTokenManager
 {
 
+    /**
+     * @param string $tokenFieldName
+     * @return string
+     */
     public function generate(Request $request, $tokenFieldName)
     {
         $csrfToken = sha1(uniqid('auth'));
@@ -16,6 +20,11 @@ class CsrfTokenManager
         return $csrfToken;
     }
 
+    /**
+     * @param string $tokenFieldName
+     * @throws CsrfTokenVerificationException
+     * @return void
+     */
     public function verify(Request $request, $tokenFieldName)
     {
         if (false === $request->hasPreviousSession()) {

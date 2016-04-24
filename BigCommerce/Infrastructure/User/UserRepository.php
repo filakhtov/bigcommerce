@@ -7,6 +7,11 @@ use \InvalidArgumentException;
 
 class UserRepository extends EntityRepository
 {
+
+    /**
+     * @throws InvalidArgumentException
+     * @return void
+     */
     public function persist(User $user)
     {
         try {

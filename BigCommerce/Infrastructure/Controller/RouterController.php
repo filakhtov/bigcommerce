@@ -8,6 +8,7 @@ use \Symfony\Component\HttpFoundation\Response;
 class RouterController extends Controller
 {
 
+    /** @return Response */
     public function pageNotFound(Request $request)
     {
         return new Response(
@@ -15,6 +16,10 @@ class RouterController extends Controller
         );
     }
 
+    /**
+     * @param string $message
+     * @return Response
+     */
     public function error(Request $request, $message)
     {
         if($request->headers->get('X-Api')) {

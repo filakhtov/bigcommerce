@@ -5,8 +5,10 @@ use \InvalidArgumentException;
 class ServiceRegistry
 {
 
+    /** @var mixed[] */
     private $services = [];
 
+    /** @throws InvalidArgumentException */
     public function __construct(array $services)
     {
         foreach ($services as $name => $service) {
@@ -14,28 +16,39 @@ class ServiceRegistry
         }
     }
 
-    public function addService($name, $service)
+    /**
+     * @param string $alias
+     * @param mixed $service Must be an instance of an Object
+     * @throws InvalidArgumentException
+     * @return ServiceRegistry
+     */
+    public function addService($alias, $service)
     {
         if (false === is_object($service)) {
-            throw new InvalidArgumentException("Invalid service {$name}: object expected.");
+            throw new InvalidArgumentException("Invalid service {$alias}: object expected.");
         }
 
-        if (array_key_exists($name, $this->services)) {
-            throw new InvalidArgumentException("Service {$name} already registered.");
+        if (array_key_exists($alias, $this->services)) {
+            throw new InvalidArgumentException("Service {$alias} already registered.");
         }
 
-        $this->services[$name] = $service;
+        $this->services[$alias] = $service;
 
         return $this;
     }
 
-    public function service($name)
+    /**
+     * @param string $alias
+     * @throws InvalidArgumentException
+     * @return mixed
+     */
+    public function service($alias)
     {
-        if(false === array_key_exists($name, $this->services)) {
-            throw new InvalidArgumentException("Service {$name} war not registered.");
+        if(false === array_key_exists($alias, $this->services)) {
+            throw new InvalidArgumentException("Service {$alias} war not registered.");
         }
 
-        return $this->services[$name];
+        return $this->services[$alias];
    }
 
 }

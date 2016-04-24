@@ -21,14 +21,18 @@
                 <div class="col-xs-12" data-ng-show="message">
                     <div class="alert text-center cursor-pointer" role="alert" data-ng-click="hideMessage()" data-ng-class="message.type">[{ message.text }]</div>
                 </div>
-                <h1 class="text-center">Here is your search history, so far:</h1>
-                <ul class="list-group">
-                    {% for historyItem in user.searchHistory %}
-                        <li class="list-group-item" data-history-removable="{{ historyItem.id }}">
-                            <a href="/?query={{ historyItem.query|url_encode }}">{{ historyItem.query }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
+                {% if user.searchHistory | length %}
+                    <h1 class="text-center">Here is your search history, so far:</h1>
+                    <ul class="list-group">
+                        {% for historyItem in user.searchHistory %}
+                            <li class="list-group-item" data-history-removable="{{ historyItem.id }}">
+                                <a href="/?query={{ historyItem.query|url_encode }}">{{ historyItem.query }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <h1 class="text-center">Nothing is here, so far.</h1>
+                {% endif %}
             </div>
         </div>
     </div>

@@ -11,8 +11,9 @@ class Router
     private $routes = [];
 
     /**
+     * @param string $path
      * @throws InvalidArgumentException
-     * @return \BigCommerce\Infrastructure\Routing\Router
+     * @return Router
      */
     public function addRoute($path, callable $action)
     {
@@ -27,7 +28,7 @@ class Router
 
     /**
      * @throws InvalidArgumentException
-     * @return \BigCommerce\Infrastructure\Routing\Router
+     * @return Router
      */
     public function addRoutes(array $routes)
     {

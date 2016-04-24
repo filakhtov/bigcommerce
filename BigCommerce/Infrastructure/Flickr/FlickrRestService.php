@@ -19,6 +19,10 @@ class FlickrRestService
         $this->configuration = $flickrRestConfiguration;
     }
 
+    /**
+     * @throws CurlException
+     * @return mixed[]
+     */
     public function __invoke(FlickrRequestInterface $request)
     {
         $requestData = array_merge([

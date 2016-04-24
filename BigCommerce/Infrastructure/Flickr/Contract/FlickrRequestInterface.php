@@ -3,6 +3,6 @@
 interface FlickrRequestInterface
 {
 
-    /** @return array */
+    /** @return mixed[] */
     public function data();
 }

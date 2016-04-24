@@ -12,17 +12,23 @@ class Authentication
     /**
      * @ORM\Id
      * @ORM\Column(type="string", length=10, unique=true, nullable=false)
+     * @var string
      */
     private $username;
 
-    /** @ORM\Column(type="string", length=60, nullable=false) */
+    /**
+     * @ORM\Column(type="string", length=60, nullable=false)
+     * @var string
+     */
     private $password;
 
+    /** @return string */
     public function username()
     {
         return $this->username;
     }
 
+    /** @return string */
     public function password()
     {
         return $this->password;

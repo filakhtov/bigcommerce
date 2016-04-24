@@ -1,12 +1,15 @@
 <?php namespace BigCommerce\Infrastructure\Routing;
 
 use \BigCommerce\Domain\Entity\User;
+use \BigCommerce\Infrastructure\Authentication\Authentication;
 use \BigCommerce\Infrastructure\Registry\ServiceRegistry;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Session\SessionInterface;
 
 abstract class Controller
 {
+
+    /** @var ServiceRegistry */
     private $registry;
 
     final public function __construct(ServiceRegistry $registry)
@@ -14,11 +17,18 @@ abstract class Controller
         $this->registry = $registry;
     }
 
-    final protected function service($name) {
-        return $this->registry->service($name);
+    /**
+     * @param string $alias
+     * @return mixed
+     */
+    final protected function service($alias)
+    {
+        return $this->registry->service($alias);
     }
 
-    protected function isAuthenticated(Request $request) {
+    /** @return bool */
+    protected function isAuthenticated(Request $request)
+    {
         $isAuthenticated = false;
 
         if($request->hasPreviousSession()) {
@@ -33,12 +43,21 @@ abstract class Controller
         return $isAuthenticated;
     }
 
-    protected function saveAuthenticationIntoSession(SessionInterface $session, $authentication) {
+    /** @return void */
+    protected function saveAuthenticationIntoSession(SessionInterface $session, Authentication $authentication)
+    {
         $session->migrate(true, 0);
         $session->set('user.authentication', $authentication);
+
+        return $this;
     }
 
-    protected function render($template, array $context = []) {
+    /**
+     * @param string $template
+     * @return string
+     */
+    protected function render($template, array $context = [])
+    {
         return $this->service('twig')->render($template, $context);
     }
 

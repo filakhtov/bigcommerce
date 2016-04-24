@@ -6,16 +6,26 @@ use \InvalidArgumentException;
 class Configuration implements FlickrRestConfigurationInterface
 {
 
+    /** @var string */
     private $apiKey;
+
+    /** @var string */
     private $apiEndpoint;
+
+    /** @var mixed[] */
     private $databaseConnection;
 
+    /** @throws InvalidArgumentException */
     public function __construct(array $parameters)
     {
-        $this->setFlickrConfiguration($parameters);
-        $this->setDoctrineConfiguration($parameters);
+        $this->setFlickrConfiguration($parameters)
+            ->setDoctrineConfiguration($parameters);
     }
 
+    /**
+     * @throws InvalidArgumentException
+     * @return Configuration
+     */
     private function setFlickrConfiguration(array $parameters)
     {
         if (false === array_key_exists('flickr', $parameters) || false === is_array($parameters['flickr'])) {
@@ -33,14 +43,22 @@ class Configuration implements FlickrRestConfigurationInterface
             throw new InvalidArgumentException('Invalid flickr.api_endpoint parameter. String expected.');
         }
         $this->apiEndpoint = $parameters['flickr']['api_endpoint'];
+
+        return $this;
     }
 
+    /**
+     * @throws InvalidArgumentException
+     * @return Configuration
+     */
     private function setDoctrineConfiguration(array $parameters)
     {
         if (false === array_key_exists('db', $parameters) || false === is_array($parameters['db'])) {
             throw new InvalidArgumentException('Invalid db configuration parameter. Array expected.');
         }
         $this->databaseConnection = $parameters['db'];
+
+        return $this;
     }
 
     /** @return string */

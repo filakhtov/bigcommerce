@@ -45,7 +45,7 @@
         <div class="row" data-ng-cloak="" data-ng-show="images && !imagePreview">
             <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" data-ng-repeat="image in images">
                 <a href="[{ image.url }]" data-ng-click="viewImage($event, image)">
-                    <img data-ng-src="[{ image.thumbnail }]" alt="[{ image.title }]" class="img-responsive center" />
+                    <img data-ng-src="[{ image.thumbnailUrl }]" alt="[{ image.title }]" class="img-responsive center" />
                 </a>
             </div>
             <div class="col-xs-12 text-center" data-ng-show="!noResults">

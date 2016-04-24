@@ -17,6 +17,8 @@ use \Doctrine\DBAL\Migrations\Tools\Console\Helper\ConfigurationHelper;
 use \Doctrine\ORM\EntityManager;
 use \Doctrine\ORM\Tools\Console\ConsoleRunner;
 use \Doctrine\ORM\Tools\Setup;
+use \Exception;
+use \Symfony\Component\Console\Helper\HelperSet;
 use \Symfony\Component\Yaml\Yaml;
 use \Twig_Environment;
 use \Twig_Loader_Filesystem;
@@ -24,6 +26,10 @@ use \Twig_Loader_Filesystem;
 class Bootstrap
 {
 
+    /**
+     * @throws Exception
+     * @return ServiceRegistry
+     */
     public static function serviceRegistry()
     {
         $configuration = new Configuration(
@@ -67,6 +73,7 @@ class Bootstrap
         ]);
     }
 
+    /** @return HelperSet */
     public static function doctrineHelserSet()
     {
         $doctrineEntityManager = static::serviceRegistry()->service('doctrine'); /* @var $doctrineEntityManager EntityManager */
@@ -88,11 +95,16 @@ class Bootstrap
         return $helperSet;
     }
 
+    /** @return string */
     public static function projectRootPath()
     {
         return dirname(__DIR__);
     }
 
+    /**
+     * @param string ...
+     * @return string
+     */
     public static function pathTo()
     {
         $pathParts = func_get_args();

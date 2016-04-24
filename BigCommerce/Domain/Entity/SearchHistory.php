@@ -13,22 +13,32 @@ class SearchHistory
      * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
-    /** @ORM\Column(type="string", length=100, nullable=false, unique=true) */
+    /**
+     * @ORM\Column(type="string", length=100, nullable=false, unique=true)
+     * @var string
+     */
     private $query;
 
+    /** @return int */
     public function id()
     {
         return $this->id;
     }
 
+    /** @return string */
     public function query()
     {
         return $this->query;
     }
 
+    /**
+     * @param string $query
+     * @return SearchHistory
+     */
     public function setQuery($query)
     {
         if (false === is_null($this->id())) {
@@ -44,5 +54,7 @@ class SearchHistory
         }
 
         $this->query = $query;
+
+        return $this;
     }
 }

@@ -17,6 +17,7 @@ class User
      * @ORM\Column(type="integer", nullable=false)
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * @var int
      */
     private $id;
 
@@ -27,13 +28,20 @@ class User
      *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="history_id", referencedColumnName="id")}
      * )
+     * @var ArrayCollection[SearchHistory]
      */
     private $searchHistory;
 
-    /** @ORM\Column(type="string", length=10, unique=true, nullable=false) */
+    /**
+     * @ORM\Column(type="string", length=10, unique=true, nullable=false)
+     * @var string
+     */
     private $username;
 
-    /** @ORM\Column(type="string", length=60, nullable=false) */
+    /**
+     * @ORM\Column(type="string", length=60, nullable=false)
+     * @var string
+     */
     private $password;
 
     public function __construct()
@@ -41,21 +49,25 @@ class User
         $this->searchHistory = new ArrayCollection();
     }
 
+    /** @var int */
     public function id()
     {
         return $this->id;
     }
 
+    /** @var string */
     public function username()
     {
         return $this->username;
     }
 
+    /** @var string */
     public function password()
     {
         return $this->password;
     }
 
+    /** @var User */
     public function addSearchHistoryItem(SearchHistory $searchHistory)
     {
         if (false === $this->searchHistory->contains($searchHistory)) {
@@ -64,17 +76,23 @@ class User
         return $this;
     }
 
+    /** @var User */
     public function removeSearchHistoryItem(SearchHistory $searchHistory)
     {
         $this->searchHistory->removeElement($searchHistory);
         return $this;
     }
 
+    /** @var ArrayCollection[SearchHistory] */
     public function searchHistory()
     {
         return $this->searchHistory;
     }
 
+    /**
+     * @param string $username
+     * @return User
+     */
     public function setUsername($username)
     {
         if (false === is_null($this->id())) {
@@ -94,6 +112,10 @@ class User
         return $this;
     }
 
+    /**
+     * @param string $password
+     * @return User
+     */
     public function setPassword($password)
     {
         if (false === is_string($password)) {

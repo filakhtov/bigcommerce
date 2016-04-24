@@ -5,6 +5,7 @@ use \Twig_SimpleFilter;
 class CopyrightExtension extends \Twig_Extension
 {
 
+    /** @return Twig_SimpleFilter[] */
     public function getFilters()
     {
         return [
@@ -12,11 +13,16 @@ class CopyrightExtension extends \Twig_Extension
         ];
     }
 
+    /** @return string */
     public function getName()
     {
         return __METHOD__;
     }
 
+    /**
+     * @param int $yearOfEstablishment
+     * @return string
+     */
     public function copyrightYears($yearOfEstablishment)
     {
         $currentYear = date('Y');
