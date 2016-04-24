@@ -1,7 +1,8 @@
 <?php namespace BigCommerce\Infrastructure\Controller;
 
-use \BigCommerce\Domain\User;
+use \BigCommerce\Domain\Entity\User;
 use \BigCommerce\Infrastructure\Form\CsrfTokenVerificationException;
+use \InvalidArgumentException;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
@@ -31,11 +32,11 @@ class RegistrationController extends \BigCommerce\Infrastructure\Routing\Control
     private function createAccount(Request $request)
     {
         try {
-            $this->service('csrf')->verify($request, 'csrf_register');
-
             $username = $request->request->get('username');
             $password = $request->request->get('password');
             $rpassword = $request->request->get('rpassword');
+
+            $this->service('csrf')->verify($request, 'csrf_register');
 
             $this->verifyPassword($password, $rpassword);
             $this->createUser($username, $password);
@@ -45,9 +46,9 @@ class RegistrationController extends \BigCommerce\Infrastructure\Routing\Control
 
             return new RedirectResponse('/');
         } catch (CsrfTokenVerificationException $e) {
-            return $this->showRegistrationForm($request, ['message' => 'Unexpected security error. Please, try again.']);
+            return $this->showRegistrationForm($request, ['message' => 'Unexpected security error. Please, try again.', 'username' => $username]);
         } catch (InvalidArgumentException $e) {
-            return $this->showRegistrationForm($request, ['message' => $e->getMessage()]);
+            return $this->showRegistrationForm($request, ['message' => $e->getMessage(), 'username' => $username]);
         }
     }
 

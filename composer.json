@@ -10,12 +10,15 @@
     "autoload": {
         "psr-4": {
             "BigCommerce\\": "BigCommerce/"
-        }
+        },
+        "files": ["BigCommerce/Bootstrap.php"]
     },
     "require": {
         "phpunit/phpunit": "^5.@stable",
         "symfony/yaml": "^3.0",
         "twig/twig": "^1.24",
-        "symfony/http-foundation": "^3.0"
+        "symfony/http-foundation": "^3.0",
+        "doctrine/orm": "^2.5",
+        "doctrine/migrations": "^1.4"
     }
 }

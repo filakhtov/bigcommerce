@@ -1,8 +1,8 @@
 <?php namespace BigCommerce\Infrastructure\Flickr;
 
 use \BigCommerce\Domain\Contract\ApiRepositoryInterface;
-use \BigCommerce\Domain\Gallery;
-use \BigCommerce\Domain\Image;
+use \BigCommerce\Domain\Entity\Gallery;
+use \BigCommerce\Domain\Entity\Image;
 use \BigCommerce\Infrastructure\Flickr\FlickrRestService;
 use \BigCommerce\Infrastructure\Flickr\SearchFlickrRequest;
 

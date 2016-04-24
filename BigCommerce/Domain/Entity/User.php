@@ -1,10 +1,25 @@
-<?php namespace BigCommerce\Domain;
+<?php namespace BigCommerce\Domain\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+
+/**
+ * @ORM\Entity(repositoryClass="BigCommerce\Infrastructure\User\UserRepository")
+ * @ORM\Table(name="user")
+ */
 class User
 {
 
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Id
+     * @ORM\GeneratedValue(strategy="AUTO")
+     */
     private $id;
+
+    /** @ORM\Column(type="string", length=10, unique=true, nullable=false) */
     private $username;
+
+    /** @ORM\Column(type="string", length=60, nullable=false) */
     private $password;
 
     public function id()

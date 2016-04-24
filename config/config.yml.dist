@@ -1,3 +1,9 @@
 flickr:
     api_endpoint: 'https://api.flickr.com/services/rest/'
     api_key: 'YOUR_API_KEY_HERE'
+
+db:
+    driver: 'pdo_mysql'
+    user: 'dbusername'
+    password: 'dbpassword'
+    dbname: 'mydatabase'

@@ -1,8 +1,6 @@
-<?php namespace BigCommerce\Domain;
+<?php namespace BigCommerce\Domain\Entity;
 
-use \JsonSerializable;
-
-class Image implements JsonSerializable
+class Image implements \JsonSerializable
 {
 
     private $thumbnail;

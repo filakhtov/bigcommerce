@@ -8,10 +8,12 @@ class Configuration implements FlickrRestConfigurationInterface
 
     private $apiKey;
     private $apiEndpoint;
+    private $databaseConnection;
 
     public function __construct(array $parameters)
     {
         $this->setFlickrConfiguration($parameters);
+        $this->setDoctrineConfiguration($parameters);
     }
 
     private function setFlickrConfiguration(array $parameters)
@@ -33,6 +35,14 @@ class Configuration implements FlickrRestConfigurationInterface
         $this->apiEndpoint = $parameters['flickr']['api_endpoint'];
     }
 
+    private function setDoctrineConfiguration(array $parameters)
+    {
+        if (false === array_key_exists('db', $parameters) || false === is_array($parameters['db'])) {
+            throw new InvalidArgumentException('Invalid db configuration parameter. Array expected.');
+        }
+        $this->databaseConnection = $parameters['db'];
+    }
+
     /** @return string */
     public function apiKey()
     {
@@ -43,6 +53,11 @@ class Configuration implements FlickrRestConfigurationInterface
     public function apiEndpoint()
     {
         return $this->apiEndpoint;
+    }
+
+    public function databaseConnection()
+    {
+        return $this->databaseConnection;
     }
 
 }
