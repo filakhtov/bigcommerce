@@ -9,6 +9,7 @@ class AuthenticationService
 {
     private $ar;
     private $ph;
+    private $authentication;
 
     public function __construct(EntityRepository $ar, PasswordHasher $ph)
     {
@@ -28,15 +29,26 @@ class AuthenticationService
             throw new AuthenticationException("Invalid password for '{$username}'.");
         }
 
-        return $authentication;
+        $this->authentication = $authentication;
+
+        return $this->authentication;
     }
 
     public function isAuthenticated(Authentication $authentication)
     {
-        $dbAuthentication = $this->ar->find($authentication->username()); /* @var $authentication Authentication */
+        if(is_null($this->currentAuthentication())) {
+            $dbAuthentication = $this->ar->find($authentication->username()); /* @var $authentication Authentication */
 
-        return (false === is_null($dbAuthentication)) &&
-            ($dbAuthentication->password() === $authentication->password());
+            if (false === is_null($dbAuthentication) && $dbAuthentication->password() === $authentication->password()) {
+                $this->authentication = $dbAuthentication;
+            }
+        }
+
+        return false === is_null($this->currentAuthentication());
+    }
+
+    public function currentAuthentication() {
+        return $this->authentication;
     }
 
 }

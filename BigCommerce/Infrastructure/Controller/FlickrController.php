@@ -1,5 +1,6 @@
 <?php namespace BigCommerce\Infrastructure\Controller;
 
+use \BigCommerce\Domain\Entity\User;
 use \BigCommerce\Infrastructure\Flickr\FlickrApiRepository;
 use \Exception;
 use \Symfony\Component\HttpFoundation\JsonResponse;
@@ -9,28 +10,40 @@ use \Symfony\Component\HttpFoundation\Response;
 
 class FlickrController extends \BigCommerce\Infrastructure\Routing\Controller
 {
-    public function search(Request $request) {
-        if(false === $this->isAuthenticated($request)) {
+
+    private function authenticatedUser()
+    {
+        return $this->service('doctrine')
+            ->getRepository(User::class)
+            ->findOneByUsername(
+                $this->service('auth')->currentAuthentication()->username()
+            );
+    }
+
+    public function search(Request $request)
+    {
+        if (false === $this->isAuthenticated($request)) {
             return new RedirectResponse('/login');
         }
 
         return new Response(
-            $this->render('search.html.twig')
+                $this->render('search.html.twig', ['user' => $this->authenticatedUser()])
         );
     }
 
-    public function gallery(Request $request) {
-        if(false === $this->isAuthenticated($request)) {
+    public function gallery(Request $request)
+    {
+        if (false === $this->isAuthenticated($request)) {
             return new JsonResponse(['message' => 'Please, authenticate before proceeding.'], 403);
         }
 
         $query = $request->query->get('query', null);
-        if(is_null($query) || strlen($query) < 3) {
+        if (is_null($query) || strlen($query) < 3) {
             throw new Exception("Bad request received.");
         }
 
         $page = $request->query->filter('page', null, FILTER_VALIDATE_INT);
-        if(is_null($page) || $page < 1) {
+        if (is_null($page) || $page < 1) {
             $page = 1;
         }
 
@@ -39,4 +52,5 @@ class FlickrController extends \BigCommerce\Infrastructure\Routing\Controller
 
         return new JsonResponse($gallery);
     }
+
 }

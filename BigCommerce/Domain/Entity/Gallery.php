@@ -1,5 +1,7 @@
 <?php namespace BigCommerce\Domain\Entity;
 
+use \BigCommerce\Domain\Entity\Image;
+
 class Gallery implements \JsonSerializable
 {
 
@@ -21,7 +23,7 @@ class Gallery implements \JsonSerializable
         }
     }
 
-    public function addImage(\BigCommerce\Domain\Image $image)
+    public function addImage(Image $image)
     {
         if (false === in_array($image, $this->images)) {
             $this->images[] = $image;
