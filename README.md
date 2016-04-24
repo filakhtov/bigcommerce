@@ -116,7 +116,31 @@ API communication is done via ``FlickrRestService``. It is slightly generalized 
 
 Angular-powered preview is used instead of simply opening a new window with bigger size image. Works well on mobile platform too.
 
+#### Many-to-many User to History relations
+
+I've made history items unqiue and immutable for the sake of normalization. Only intermediate mapping table is modifiable. History record once created can not be removed or modified. This gives a possibility to use same search item across multiple users.
+
+### Some bonuses
+
+#### History management
+
+There is a possibility to remove search history items. Frontend part is based on __AngularJS__ and uses directives to do a heavy-lifting. __DELETE__ HTTP method is used to remove items from search history, although it is only for demo purposes and not even close to __REST__.
+
+#### CSRF protection
+
+There is built-in CSRF form protection mechanism. It is used only on login / registration pages.
+
+#### Autologin after registration
+
+User is automatically logged in right after successful registration. Additionally, it is not possible to access registration page for authenticated user.
+
 ### Shortcuts / limitations
+
+#### Few assumptions
+
+- Username must be between 3 to 10 characters long
+- Password must be at least 6 characters long
+- Search request must be at least 3 and up to 100 characters long
 
 #### TDD
 
@@ -135,6 +159,8 @@ This is makes no sense to use __SMACSS__ inside such a small project. But for pr
 Since this is very simple one pade app I do not see reasons to use __Angular Routing (ngRoute)__ module. For the project with more than three simple views I would prefer to go in this direction.
 
 Proper use of __HTML5 Polyglot__ markup is my preffered way of presenting documents. This means strict XML validations, closing tags, empty attributes, proper content-type (``application/xhtml+xml``) and no ``document.write()`` and others ugly DOM handling ways.
+
+__Search controller__ should also be refactored. At least __preview__ and __pagination__ subcontrollers can be factored out and separated from search controller, possibly with more generalization (if needed).
 
 #### Naming and Annotations
 
@@ -164,6 +190,16 @@ There must be provided way much more validators around the project. Some helper 
 
 Additional attention is required to configuration parser. There is primitive and non-efficient validation and it should ideally be replaced with much more robust solution.
 
+Please, take a look on how setters are used inside entities to prevent modification of already persisted entries. I like concept of encapsulating such things into entities, but it very much depends on the usage context.
+
+#### Flickr API is a bit unreliable
+
+During late stages of extensive testing, I recognized that pagination in Flickr API is not really reliable. Total number of pages is varying from request to request and often times there is no images returned from their side. As far as I researched across Internet this is known problem, but no solution exists yet.
+
+#### Configuration loading
+
+Configuration loading is currently done via unchecked direct file_get_contents() call. In real world scenario, a proxy would have been created in a similar way to ``CurlProxy``. This is necessary to promote testability and reliability and gives a better control of error handling (exceptions could be thrown instead of issuing a warning). At this stage I'm really looking forward for PHP7, as plain errors will be ``Throwable`` and __catchable__.
+
 #### Configuration class
 
 I decided to go wigh uniform Configuration container for this project. That means, every service that requires some degree of configuration - should expose an interface. All these interfaces then will be implemented by single uniform Configuration class. As the number of interfaces grows - aggregation of multiple configuration value objects that conforms to separated interfaces and proxied via uniformed class can be applied to reduce complexity.
@@ -173,3 +209,6 @@ I decided to go wigh uniform Configuration container for this project. That mean
 - Twig caching
 - AJAX queue management, centralized loaders and handlers
 - Sorting, images per page, various filters
+- Blocking users on many unsuccessful login attempts
+- Good alternative to previous point would be using captcha
+- At the moment, if user comes to some specific URL and is unauthorized - she gets redirected to the home page. Would be cool to redirect to original request URL.
