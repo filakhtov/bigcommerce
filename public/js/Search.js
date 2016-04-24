@@ -3,13 +3,7 @@
 
     app.factory('SearchRepository', ['$http', '$location', function($http) {
         var fetchGalleryForQuery = function(query, page, saveToHistory) {
-            var config = {
-                'headers': {
-                    'X-Api': 'AngularJS'
-                }
-            };
-
-            return $http.get('/gallery?query=' + encodeURIComponent(query) + '&page=' + encodeURIComponent(page) + (saveToHistory ? '&saveToHistory=1' : ''), config);
+            return $http.get('/gallery?query=' + encodeURIComponent(query) + '&page=' + encodeURIComponent(page) + (saveToHistory ? '&saveToHistory=1' : ''));
         };
 
         return fetchGalleryForQuery;

@@ -5,6 +5,7 @@ use \BigCommerce\Infrastructure\Controller\FlickrController;
 use \BigCommerce\Infrastructure\Controller\LoginController;
 use \BigCommerce\Infrastructure\Controller\RegistrationController;
 use \BigCommerce\Infrastructure\Controller\RouterController;
+use \BigCommerce\Infrastructure\Controller\SearchHistoryController;
 use \BigCommerce\Infrastructure\Routing\RouterException;
 use \BigCommerce\Infrastructure\Twig\CopyrightExtension;
 use \Symfony\Component\HttpFoundation\Request;
@@ -31,7 +32,9 @@ try {
         ->addRoute('/gallery', [new FlickrController($registry), 'gallery'])
         ->addRoute('/login', [new LoginController($registry), 'login'])
         ->addRoute('/logout', [new LoginController($registry), 'logout'])
-        ->addRoute('/register', [new RegistrationController($registry), 'register']);
+        ->addRoute('/register', [new RegistrationController($registry), 'register'])
+        ->addRoute('/history', [new SearchHistoryController($registry), 'showHistory'])
+        ->addRoute('/delete', [new SearchHistoryController($registry), 'removeHistoryElement']);
 
     $response = $router->resolve($request);
 } catch (RouterException $e) {

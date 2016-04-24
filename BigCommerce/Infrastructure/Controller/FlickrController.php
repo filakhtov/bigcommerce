@@ -1,7 +1,6 @@
 <?php namespace BigCommerce\Infrastructure\Controller;
 
 use \BigCommerce\Domain\Entity\SearchHistory;
-use \BigCommerce\Domain\Entity\User;
 use \BigCommerce\Infrastructure\Flickr\FlickrApiRepository;
 use \Doctrine\ORM\EntityManager;
 use \Exception;
@@ -49,16 +48,6 @@ class FlickrController extends \BigCommerce\Infrastructure\Routing\Controller
         $gallery = $flickrRepo->findGallery($query, $page);
 
         return new JsonResponse($gallery);
-    }
-
-    /** @return User */
-    private function authenticatedUser()
-    {
-        return $this->service('doctrine')
-            ->getRepository(User::class)
-            ->findOneByUsername(
-                $this->service('auth')->currentAuthentication()->username()
-            );
     }
 
     private function saveSearchToHistory($query)

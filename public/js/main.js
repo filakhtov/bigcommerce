@@ -4,4 +4,7 @@ angular.module('bigcommerce-flickr', [])
     }])
     .config(['$locationProvider', function ($locationProvider) {
         $locationProvider.html5Mode(true);
+    }])
+    .config(['$httpProvider', function ($httpProvider) {
+        $httpProvider.defaults.headers.common['X-Api'] = 'AngularJS';
     }]);

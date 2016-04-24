@@ -1,5 +1,6 @@
 <?php namespace BigCommerce\Infrastructure\Routing;
 
+use \BigCommerce\Domain\Entity\User;
 use \BigCommerce\Infrastructure\Registry\ServiceRegistry;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Session\SessionInterface;
@@ -39,6 +40,16 @@ abstract class Controller
 
     protected function render($template, array $context = []) {
         return $this->service('twig')->render($template, $context);
+    }
+
+    /** @return User */
+    protected function authenticatedUser()
+    {
+        return $this->service('doctrine')
+            ->getRepository(User::class)
+            ->findOneByUsername(
+                $this->service('auth')->currentAuthentication()->username()
+            );
     }
 
 }
