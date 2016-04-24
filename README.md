@@ -208,6 +208,10 @@ Configuration loading is currently done via unchecked direct file_get_contents()
 
 I decided to go wigh uniform Configuration container for this project. That means, every service that requires some degree of configuration - should expose an interface. All these interfaces then will be implemented by single uniform Configuration class. As the number of interfaces grows - aggregation of multiple configuration value objects that conforms to separated interfaces and proxied via uniformed class can be applied to reduce complexity.
 
+#### UserRepository
+
+User repository is completely useles as one can simply directly use __EntityManager__. Yet it serves a demonstrational purpose of usage for custom __Doctrine__ repositories.
+
 #### Nice to have
 
 - Twig caching
