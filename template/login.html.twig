@@ -1,7 +1,7 @@
 {% extends "layout.html.twig" %}
 
 {% block menu %}
-    {% include "menu.html.twig" %}
+    {% include "menu.html.twig" with {'menu': 'login'} %}
 {% endblock %}
 
 {% block title %}BigCommerce :: Authentication{% endblock %}

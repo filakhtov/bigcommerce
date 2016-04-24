@@ -35,7 +35,6 @@ class LoginController extends \BigCommerce\Infrastructure\Routing\Controller
     private function showLoginForm(Request $request, array $data = [])
     {
         $data['csrfToken'] = $this->service('csrf')->generate($request, 'csrf_login');
-        $data['menu'] = 'login';
 
         return new Response(
             $this->render('login.html.twig', $data)

@@ -7,6 +7,10 @@
 
 {% block header %}Howdy, {{ user.username }}! <a class="btn btn-xs btn-warning" href="/logout">Not you?</a>{% endblock %}
 
+{% block menu %}
+    {% include "menu-authenticated.html.twig" with {'menu': 'search'} %}
+{% endblock %}
+
 {% block title %}BigCommerce :: Search{% endblock %}
 
 {% block content %}
@@ -15,7 +19,7 @@
             <div class="col-xs-12">
                 <form name="searchForm" data-ng-submit="searchFormSubmit()" novalidate="">
                     <div class="input-group" data-ng-class="{'has-error':error}">
-                        <input type="text" name="query" class="form-control input-lg" placeholder="What are you looking for today?" required="" data-ng-model="searchRequest.query" minlength="3">
+                        <input type="text" name="query" class="form-control input-lg" placeholder="What are you looking for today?" required="" data-ng-model="searchRequest.query" minlength="3" maxlength="100">
                         <span class="input-group-btn">
                             <button type="submit" class="btn btn-success btn-lg">
                                 <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
@@ -40,7 +44,7 @@
         <div class="row" data-ng-cloak="" data-ng-show="images && !imagePreview">
             <div class="col-xs-12 col-sm-6 col-md-3 col-lg-2" data-ng-repeat="image in images">
                 <a href="[{ image.url }]" data-ng-click="viewImage($event, image)">
-                    <img data-ng-src="[{ image.thumbnail }]" alt="[{ image.title }]" class="img-responsive" />
+                    <img data-ng-src="[{ image.thumbnail }]" alt="[{ image.title }]" class="img-responsive center" />
                 </a>
             </div>
             <div class="col-xs-12 text-center" data-ng-show="!noResults">
@@ -68,7 +72,7 @@
                     <span class="hidden-xs"></span>
                 </button>
             </div>
-            <div class="col-xs-9">
+            <div class="col-xs-9 hide-overflow">
                 <h3>[{ imagePreview.title || "No title" }]</h3>
             </div>
             <div class="col-xs-12 text-center">

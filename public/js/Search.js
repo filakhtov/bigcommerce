@@ -2,13 +2,14 @@
     var app = angular.module('bigcommerce-flickr');
 
     app.factory('SearchRepository', ['$http', '$location', function($http) {
-        var fetchGalleryForQuery = function(query, page) {
+        var fetchGalleryForQuery = function(query, page, saveToHistory) {
             var config = {
                 'headers': {
                     'X-Api': 'AngularJS'
                 }
             };
-            return $http.get('/gallery?query=' + encodeURIComponent(query) + '&page=' + encodeURIComponent(page), config);
+
+            return $http.get('/gallery?query=' + encodeURIComponent(query) + '&page=' + encodeURIComponent(page) + (saveToHistory ? '&saveToHistory=1' : ''), config);
         };
 
         return fetchGalleryForQuery;
@@ -44,21 +45,21 @@
         };
 
         $scope.searchFormSubmit = function() {
-            if(!$scope.searchForm.$valid) {
+            if (!$scope.searchForm.$valid) {
                 $scope.showError('Please, enter at least 3 characters to search.');
             } else {
-                $scope.search($scope.searchRequest);
+                $scope.search($scope.searchRequest, true);
             }
 
             return false;
         };
 
-        $scope.search = function(searchRequest) {
+        $scope.search = function(searchRequest, saveToHistory) {
             $scope.hideError();
             $scope.showLoader(true);
             $scope.noResults = false;
 
-            SearchRepository(searchRequest.query, searchRequest.page)
+            SearchRepository(searchRequest.query, searchRequest.page, saveToHistory)
                 .then(function(response) {
                     var data = response.data;
 
@@ -80,9 +81,9 @@
         };
 
         var getObjectVar = function(object) {
-            for(var i = 1; i < arguments.length; ++i) {
+            for (var i = 1; i < arguments.length; ++i) {
                 var key = arguments[i];
-                if(angular.isObject(object) && key in object) {
+                if (angular.isObject(object) && key in object) {
                     object = object[key];
                 } else {
                     object = null;
@@ -97,10 +98,10 @@
 
         var insertPage = function(pages, pageToInsert) {
             var numberOfPagesToShow = pages.length;
-            if(numberOfPagesToShow) {
+            if (numberOfPagesToShow) {
                 var lastPage = pages[--numberOfPagesToShow];
 
-                if(pageToInsert !== ++lastPage) {
+                if (pageToInsert !== ++lastPage) {
                     pages.push(0);
                 }
             }
@@ -117,8 +118,8 @@
 
         $scope.paginator = function(page, pages) {
             var shownPages = [];
-            for(var i = 1; i <= pages; ++i) {
-                if(
+            for (var i = 1; i <= pages; ++i) {
+                if (
                     (i <= 3) ||
                     isPageCloseToCurrent(page, i) ||
                     i > pages - 3
@@ -133,7 +134,7 @@
         $scope.getLastPage = function() {
             var page = 0;
 
-            if($scope.pages) {
+            if ($scope.pages) {
                 page = $scope.pages[$scope.pages.length - 1];
             }
 
@@ -146,7 +147,7 @@
         };
 
         $scope.goToPage = function(page) {
-            if(page < 1 || page > $scope.getLastPage() || page === $scope.searchRequest.page) {
+            if (page < 1 || page > $scope.getLastPage() || page === $scope.searchRequest.page) {
                 return;
             }
 
@@ -154,11 +155,11 @@
             $scope.search($scope.searchRequest);
         };
 
-        if(!$scope.searchRequest.page) {
+        if (!$scope.searchRequest.page) {
             $scope.searchRequest.page = 1;
         }
 
-        if($scope.searchRequest.query) {
+        if ($scope.searchRequest.query) {
             $scope.search($scope.searchRequest);
         }
     }]);

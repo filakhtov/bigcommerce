@@ -22,7 +22,6 @@ class RegistrationController extends \BigCommerce\Infrastructure\Routing\Control
     private function showRegistrationForm(Request $request, array $data = [])
     {
         $data['csrfToken'] = $this->service('csrf')->generate($request, 'csrf_register');
-        $data['menu'] = 'register';
 
         return new Response(
             $this->render('register.html.twig', $data)

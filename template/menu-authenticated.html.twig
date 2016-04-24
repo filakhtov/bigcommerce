@@ -1,1 +1,8 @@
-{# empty Twig template #}
+<div class="row">
+    <nav class="col-xs-12">
+        <ul class="nav nav-tabs">
+          <li role="presentation"{% if menu == "search" %} class="active"{% endif %}><a href="/">Search</a></li>
+          <li role="presentation"{% if menu == "history" %} class="active"{% endif %}><a href="/history">History</a></li>
+        </ul>
+    </nav>
+</div>
