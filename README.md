@@ -132,6 +132,10 @@ You will find many places where setters or void operations returns original obje
 
 In many cases there are plain old arrays are used around to store a list of the objects of the same type. In real world scenario most of them would be replaced with __typed lists__.
 
+#### Private setters
+
+I like the power of setters, as they help to increase incapsulation. Therefore I'm often use private setters to handle validation and integrity checks. Value objects are primary targets for this technique.
+
 ### Some bonuses
 
 #### History management
