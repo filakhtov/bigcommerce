@@ -120,6 +120,10 @@ Angular-powered preview is used instead of simply opening a new window with bigg
 
 I've made history items unqiue and immutable for the sake of normalization. Only intermediate mapping table is modifiable. History record once created can not be removed or modified. This gives a possibility to use same search item across multiple users.
 
+#### Reliable password encryption
+
+Latest standard additions (PHP5.5+) gives us a native reliable password encryption and constant-time hash verification using __bcrypt__ which I'm more than a happy to use!
+
 ### Some bonuses
 
 #### History management
@@ -212,3 +216,4 @@ I decided to go wigh uniform Configuration container for this project. That mean
 - Blocking users on many unsuccessful login attempts
 - Good alternative to previous point would be using captcha
 - At the moment, if user comes to some specific URL and is unauthorized - she gets redirected to the home page. Would be cool to redirect to original request URL.
+- Doctrine caching
