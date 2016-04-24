@@ -132,6 +132,10 @@ You will find many places where setters or void operations returns original obje
 
 In many cases there are plain old arrays are used around to store a list of the objects of the same type. In real world scenario most of them would be replaced with __typed lists__.
 
+#### Private setters
+
+I like the power of setters, as they help to increase incapsulation. Therefore I'm often use private setters to handle validation and integrity checks. Value objects are primary targets for this technique.
+
 ### Some bonuses
 
 #### History management
@@ -145,6 +149,10 @@ There is built-in CSRF form protection mechanism. It is used only on login / reg
 #### Autologin after registration
 
 User is automatically logged in right after successful registration. Additionally, it is not possible to access registration page for authenticated user.
+
+#### Authentication verification algorithm
+
+Although not implemented at current stage, there is a feature, that automatically logs-out all sessions if user changes his password. This is additional security hardenind technique.
 
 ### Shortcuts / limitations
 
