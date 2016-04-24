@@ -32,8 +32,13 @@ abstract class Controller
         return $isAuthenticated;
     }
 
-    protected function saveAuthenticationIntoSession(SessionInterface $session, $username) {
+    protected function saveAuthenticationIntoSession(SessionInterface $session, $authentication) {
         $session->migrate(true, 0);
-        $session->set('user.authentication', $username);
+        $session->set('user.authentication', $authentication);
     }
+
+    protected function render($template, array $context = []) {
+        return $this->service('twig')->render($template, $context);
+    }
+
 }

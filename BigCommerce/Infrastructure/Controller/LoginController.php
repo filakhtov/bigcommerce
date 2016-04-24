@@ -1,6 +1,7 @@
 <?php namespace BigCommerce\Infrastructure\Controller;
 
 use \BigCommerce\Infrastructure\Authentication\AuthenticationException;
+use \BigCommerce\Infrastructure\Form\CsrfTokenVerificationException;
 use \Exception;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
@@ -33,37 +34,18 @@ class LoginController extends \BigCommerce\Infrastructure\Routing\Controller
 
     private function showLoginForm(Request $request, array $data = [])
     {
-        $data['csrfToken'] = uniqid('auth');
-
-        $session = $request->getSession();
-        $session->set('csrfToken', $data['csrfToken']);
+        $data['csrfToken'] = $this->service('csrf')->generate($request, 'csrf_login');
+        $data['menu'] = 'login';
 
         return new Response(
-            $this->service('twig')->render('login.html.twig', $data)
+            $this->render('login.html.twig', $data)
         );
-    }
-
-    private function checkCsrfToken(Request $request)
-    {
-        if (false === $request->hasPreviousSession()) {
-            throw new Exception('Security error. Please, repeat your request.');
-        }
-
-        $session = $request->getSession();
-
-        if (false === $session->has('csrfToken')) {
-            throw new Exception('Security error. Please, repeat your request.');
-        }
-
-        if ($session->get('csrfToken') !== $request->request->get('csrf-token')) {
-            throw new Exception('Security error. Please, repeat your request.');
-        }
     }
 
     private function authenticate(Request $request)
     {
         try {
-            $this->checkCsrfToken($request);
+            $this->service('csrf')->verify($request, 'csrf_login');
 
             $this->saveAuthenticationIntoSession(
                 $request->getSession(),
@@ -74,6 +56,8 @@ class LoginController extends \BigCommerce\Infrastructure\Routing\Controller
             );
 
             $response = new RedirectResponse("/");
+        } catch (CsrfTokenVerificationException $e) {
+            $response = $this->showLoginForm($request, ['message' => 'Unexpected security error. Please, try again.']);
         } catch (AuthenticationException $e) {
             $response = $this->showLoginForm($request, ['message' => 'Invalid username or password. Please, try again.']);
         } catch (Exception $e) {

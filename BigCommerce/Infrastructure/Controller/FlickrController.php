@@ -15,7 +15,7 @@ class FlickrController extends \BigCommerce\Infrastructure\Routing\Controller
         }
 
         return new Response(
-            $this->service('twig')->render('search.html.twig')
+            $this->render('search.html.twig')
         );
     }
 

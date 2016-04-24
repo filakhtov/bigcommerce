@@ -1,6 +1,7 @@
 <?php
 
 use \BigCommerce\Infrastructure\Authentication\AuthenticationRepository;
+use \BigCommerce\Infrastructure\Authentication\PasswordHasher;
 use \BigCommerce\Infrastructure\Configuration\Configuration;
 use \BigCommerce\Infrastructure\Controller\FlickrController;
 use \BigCommerce\Infrastructure\Controller\LoginController;
@@ -8,12 +9,14 @@ use \BigCommerce\Infrastructure\Controller\RegistrationController;
 use \BigCommerce\Infrastructure\Controller\RouterController;
 use \BigCommerce\Infrastructure\Flickr\FlickrApiRepository;
 use \BigCommerce\Infrastructure\Flickr\FlickrRestService;
+use \BigCommerce\Infrastructure\Form\CsrfTokenManager;
 use \BigCommerce\Infrastructure\Php\Curl;
 use \BigCommerce\Infrastructure\Php\CurlProxy;
 use \BigCommerce\Infrastructure\Registry\ServiceRegistry;
 use \BigCommerce\Infrastructure\Routing\Router;
 use \BigCommerce\Infrastructure\Routing\RouterException;
 use \BigCommerce\Infrastructure\Twig\CopyrightExtension;
+use \BigCommerce\Infrastructure\User\UserRepository;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Session\Session;
 use \Symfony\Component\Yaml\Yaml;
@@ -41,12 +44,15 @@ try {
             new \Twig_Loader_Filesystem([$projectPath . 'templates'])
         ),
         'router' => new Router(),
-        'auth' => new AuthenticationRepository()
+        'auth' => new AuthenticationRepository(),
+        'csrf' => new CsrfTokenManager(),
+        'password' => new PasswordHasher(),
+        'user' => new UserRepository()
     ]);
 
     $routerController = new RouterController($registry);
-    set_error_handler(function($code, $message) use ($request, $routerController) {
-        $routerController->error($request, $message)->send();
+    set_error_handler(function() use ($request, $routerController) {
+        $routerController->error($request, func_get_arg(1))->send();
     }, E_RECOVERABLE_ERROR);
 
     $registry->service("twig")->addExtension(new CopyrightExtension());

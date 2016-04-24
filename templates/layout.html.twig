@@ -15,7 +15,9 @@
         </div>
     </div>
     <div class="container content">
+        {% block menu %}{% endblock %}
         {% block content %}{% endblock %}
+        <div class="row spacer"></div>
     </div>
     <div class="container-fluid footer">
         <div class="row">
