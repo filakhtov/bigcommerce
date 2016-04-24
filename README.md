@@ -38,7 +38,7 @@ You should point your web root directory to ``public`` subfolder of the project.
 
 ### Configuration
 
-Copy ``config.yml.dist`` to ``config.yml`` inside config directory and adjust api_key as needed.
+Copy ``config.yml.dist`` to ``config.yml`` inside config directory and adjust api_key and database settings as needed.
 
 ### Dependencies installation
 
@@ -46,11 +46,17 @@ Run ``composer install`` inside project folder.
 
 ### Running the test suite
 
-Just execute ``./vendor/phpunit/phpunit/phpunit -c config`` from project root directory and you will see test results.
+Just execute ``./vendor/bin/phpunit -c config`` from project root directory and you will see test results.
 
-To generate code coverage use ``./vendor/phpunit/phpunit/phpunit -c config --coverage-html=coverage``. This will create ``coverage`` subdirectory. Use ``index.html`` to browse the state.
+To generate code coverage use ``./vendor/bin/phpunit -c config --coverage-html=coverage``. This will create ``coverage`` subdirectory. Use ``index.html`` to browse the state.
 
 Due to the time constraint only some ``Infrastructure`` parts are tested. But once you see a tested class - it is 100% covered.
+
+### Database installation
+
+First create a new MySQL database. There are two possible ways to create an SQL schema:
+- Run ``./vendor/bin/doctrine orm:schema-tool:create`` to create database structure. This will create structure without support for migration possibilities.
+- Run ``./vendor/bin/doctrine-migrations migrations:migrate`` to use migration-based scheme creation. This way it will be possible to execute migrations for on-demand structure modification.
 
 ### Libraries and technologies that are used inside the project
 
@@ -60,12 +66,23 @@ Due to the time constraint only some ``Infrastructure`` parts are tested. But on
 - Symfony HTTP foundation for request/response handling
 - Bootstrap CSS library for responsive layout
 - PHPUnit testing framework for unit testing
+- Doctrine for ORM, migrations and database abstraction
 
 ### Concepts that are used in this project
 
+#### Layers separation
+
+There are currently only two layers: ``Domain`` and ``Infrastructure``. In real world project I would add two more: ``Presentation`` and ``Application``. Currently __Controllers__ from ``Infrastructure`` layers are responsible for the tasks from both, ``Presentation`` and ``Application`` layers.
+
+Additionally, __Entities__ inside of the ``Domain`` layer are not pure nor framework-agnostic. In real project I would abstract them completely from doctrine by moving annotations outside, possibly into config __YAML__ file.
+
 #### Front controller
 
-Located at ``public/index.php`` is a unified application entry point. It is primitive, but sufficient for demonstrational purposes. It set-ups __Service Registry__, instantiates necessary dependencies, reads configuration, prepares __Twig__ environment. Routing system is also configured inside of the front controller. Some simple error handling logic is also located here.
+Located at ``public/index.php`` is a unified application entry point. It is primitive, but sufficient for demonstrational purposes. It configures routing system alongside with some simple error handling logic.
+
+#### Bootstrap
+
+``BigCommerce/Bootstrap.php`` file is responsible for low-level heavy-lifting. It is responsible for resolving paths, loading configuration and creating __Service Registry__. All necessary services are instantiated and populated inside the __Service Registry__. Later on they are used across controllers.
 
 #### Service Registry
 
@@ -77,7 +94,7 @@ Project includes simplistic routing subsystem. It works only with static routes.
 
 #### No comments
 
-Comments are hard to maintain. Comments are lying. If you have to write a comment to some piece of code - this is clear indicator of problems in your code. Code must be self-explanatory. Annotations are useful for IDE completion.
+Comments are hard to maintain. Comments are lying. If you have to write a comment to some piece of code - this is clear indicator of problems in your code. Code must be self-explanatory. Annotations are useful for IDE completion though.
 
 #### TDD
 
@@ -89,7 +106,7 @@ There is one small Twig extension that is used to display copyright years in the
 
 #### Domain logic and interfaces
 
-Although there is no time/reason to use __DDD__ for such minimalistic project, layering still is very useful. ``Gallery`` and ``Image`` value object represents some core concepts from image gallery domain of the application. There is an ``ApiRepositoryInterface`` interface inside ``Contract`` directory that specifies how ``Gallery`` will be created/loaded. That promotes flexibility in implementation. One can provide multiple implementations of the interfaces, even connected to non-Flickr API.
+Although there is no time/reason to use __DDD__ for such minimalistic project, layering still is very useful. ``Gallery`` and ``Image`` value object and ``User`` and ``SearchHistory`` entities, represents some core concepts from image gallery domain and search tracking domin of the application. There is an ``ApiRepositoryInterface`` interface inside ``Contract`` directory that specifies how ``Gallery`` will be created/loaded. That promotes flexibility in implementation. One can provide multiple implementations of the interfaces, even connected to non-Flickr API.
 
 #### Flickr API Service
 
