@@ -124,6 +124,14 @@ I've made history items unqiue and immutable for the sake of normalization. Only
 
 Latest standard additions (PHP5.5+) gives us a native reliable password encryption and constant-time hash verification using __bcrypt__ which I'm more than a happy to use!
 
+#### Fluent interfaces
+
+You will find many places where setters or void operations returns original objects. I do like to have a fluent interface while respecting __Law of Demeter__.
+
+#### Typed lists
+
+In many cases there are plain old arrays are used around to store a list of the objects of the same type. In real world scenario most of them would be replaced with __typed lists__.
+
 ### Some bonuses
 
 #### History management
