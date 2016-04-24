@@ -150,6 +150,10 @@ There is built-in CSRF form protection mechanism. It is used only on login / reg
 
 User is automatically logged in right after successful registration. Additionally, it is not possible to access registration page for authenticated user.
 
+#### Authentication verification algorithm
+
+Although not implemented at current stage, there is a feature, that automatically logs-out all sessions if user changes his password. This is additional security hardenind technique.
+
 ### Shortcuts / limitations
 
 #### Few assumptions
