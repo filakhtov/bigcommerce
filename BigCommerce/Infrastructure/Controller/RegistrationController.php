@@ -12,6 +12,10 @@ class RegistrationController extends \BigCommerce\Infrastructure\Routing\Control
 
     public function register(Request $request)
     {
+        if ($this->isAuthenticated($request)) {
+            return new RedirectResponse('/');
+        }
+
         if ($request->getMethod() === 'POST') {
             return $this->createAccount($request);
         } else {
